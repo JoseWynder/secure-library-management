@@ -1,5 +1,13 @@
+Check port:
+
+netstat -aof | findstr 5432
+
+# Create Network
+
+docker create network library-network
+
 # It runs a Postgres container in version 17.7
-docker run --name librarydb -p 5432:5432 -e POSTGRES_PASSWORD=postgres -e POSTGRES_USER=postgres -e POSTGRES_DB=library postgres:17.7
+docker run --name librarydb -p 5432:5432 -d --network library-network -e POSTGRES_PASSWORD=postgres -e POSTGRES_USER=postgres -e POSTGRES_DB=library postgres:17.7
 
 # Run pgadmin 4
-docker run --name pgadmin4 -p 15432:80 -e PGADMIN_DEFAULT_EMAIL=admin@admin.com -e PGADMIN_DEFAULT_PASSWORD=admin dpage/pgadmin4:9.11
+docker run --name pgadmin4 -p 15432:80 -d --network library-network -e PGADMIN_DEFAULT_EMAIL=admin@admin.com -e PGADMIN_DEFAULT_PASSWORD=admin dpage/pgadmin4:9.11
