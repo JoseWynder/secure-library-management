@@ -3,6 +3,7 @@ package io.github.josewynder.libraryapi.model;
 import jakarta.persistence.*;
 import lombok.Data;
 
+import java.math.BigDecimal;
 import java.util.UUID;
 
 @Entity
@@ -29,7 +30,7 @@ public class Book {
     private BookGenre gender;
 
     @Column(name = "price", precision =  18, scale = 2)
-    private Double price;
+    private BigDecimal price;
 
     @ManyToOne
     @JoinColumn(name = "author_id")
