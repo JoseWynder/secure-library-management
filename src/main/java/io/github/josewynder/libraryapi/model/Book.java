@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.Data;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.UUID;
 
 @Entity
@@ -23,7 +24,7 @@ public class Book {
     private String title;
 
     @Column(name = "publication_date")
-    private String publicationDate;
+    private LocalDate publicationDate;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "gender", length = 30, nullable = false)
