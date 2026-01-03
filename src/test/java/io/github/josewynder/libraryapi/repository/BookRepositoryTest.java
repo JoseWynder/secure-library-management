@@ -28,8 +28,8 @@ class BookRepositoryTest {
         Book book = new Book();
         book.setIsbn("94567-84874");
         book.setPrice(BigDecimal.valueOf(200));
-        book.setGenre(BookGenre.FICTION);
-        book.setTitle("Who wants to be a millionaire?");
+        book.setGenre(BookGenre.MISTERY);
+        book.setTitle("From a thousand to a million 2");
         book.setPublicationDate(LocalDate.of(1975,1,2));
 
         Author author = authorRepository
@@ -168,5 +168,15 @@ class BookRepositoryTest {
     void listGenreWithPositionalParameterTest() {
         List<Book> books = bookRepository.findByGenreWithPositionalParameters(BigDecimal.valueOf(100L), BookGenre.FICTION);
         books.forEach(System.out::println);
+    }
+
+    @Test
+    void deleteByGenreTest() {
+        bookRepository.deleteByGenre(BookGenre.BIOGRAPHY);
+    }
+
+    @Test
+    void updatePublicationDateByIdTest() {
+        bookRepository.updatePublicationDate(UUID.fromString("0d040839-c2fc-4e2f-94ac-eaefa0c55ab8"), LocalDate.now());
     }
 }

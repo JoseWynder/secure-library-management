@@ -5,9 +5,11 @@ import io.github.josewynder.libraryapi.model.Book;
 import io.github.josewynder.libraryapi.model.BookGenre;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -72,4 +74,13 @@ public interface BookRepository extends JpaRepository<Book, UUID> {
     @Query("select b from Book as b where b.genre = ?2 and b.price > ?1")
     List<Book> findByGenreWithPositionalParameters(BigDecimal price, BookGenre genre);
 
+    @Modifying
+    @Transactional
+    @Query("delete from Book where genre = ?1")
+    void deleteByGenre(BookGenre genre);
+
+    @Modifying
+    @Transactional
+    @Query("update Book set publicationDate = ?2 where id = ?1")
+    void updatePublicationDate(UUID id, LocalDate publicationDate);
 }
