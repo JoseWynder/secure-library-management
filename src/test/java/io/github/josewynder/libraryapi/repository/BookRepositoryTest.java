@@ -6,6 +6,7 @@ import io.github.josewynder.libraryapi.model.BookGenre;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -24,7 +25,7 @@ class BookRepositoryTest {
     AuthorRepository authorRepository;
 
     @Test
-    void saveTest(){
+    void saveTest() {
         Book book = new Book();
         book.setIsbn("90887-84874");
         book.setPrice(BigDecimal.valueOf(100));
@@ -41,7 +42,7 @@ class BookRepositoryTest {
     }
 
     @Test
-    void saveCascadeTest(){
+    void saveCascadeTest() {
         Book book = new Book();
         book.setIsbn("90887-84874");
         book.setPrice(BigDecimal.valueOf(100));
@@ -59,7 +60,7 @@ class BookRepositoryTest {
     }
 
     @Test
-    void saveAuthorAndBookTest(){
+    void saveAuthorAndBookTest() {
         Book book = new Book();
         book.setIsbn("90887-84874");
         book.setPrice(BigDecimal.valueOf(100));
@@ -79,7 +80,7 @@ class BookRepositoryTest {
     }
 
     @Test
-    void updateBookAuthorTest(){
+    void updateBookAuthorTest() {
         UUID idBook = UUID.fromString("d854ea5b-26cc-4f2e-9fe8-e94f19b9232d");
         Book book = bookRepository.findById(idBook).orElseThrow();
 
@@ -100,5 +101,19 @@ class BookRepositoryTest {
     void deleteCascadeTest() {
         UUID idBook = UUID.fromString("01b4e868-83ef-43e1-9bdc-9c46e48669aa");
         bookRepository.deleteById(idBook);
+    }
+
+    @Test
+    @Transactional
+    void findBookTest() {
+        UUID uuid = UUID.fromString("3cc5b7a7-cd2f-4e5e-a5c3-758ef09f8b89");
+        Book book = bookRepository.findById(uuid).orElseThrow();
+
+        System.out.println("Book: ");
+        System.out.println(book.getTitle());
+
+//        System.out.println("Author: ");
+//        System.out.println(book.getAuthor().getName());
+
     }
 }
