@@ -29,7 +29,7 @@ class BookRepositoryTest {
         book.setIsbn("94567-84874");
         book.setPrice(BigDecimal.valueOf(200));
         book.setGenre(BookGenre.MISTERY);
-        book.setTitle("From a thousand to a million 2");
+        book.setTitle("UFO");
         book.setPublicationDate(LocalDate.of(1975,1,2));
 
         Author author = authorRepository
