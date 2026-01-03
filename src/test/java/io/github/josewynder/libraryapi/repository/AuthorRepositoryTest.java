@@ -1,11 +1,15 @@
 package io.github.josewynder.libraryapi.repository;
 
 import io.github.josewynder.libraryapi.model.Author;
+import io.github.josewynder.libraryapi.model.Book;
+import io.github.josewynder.libraryapi.model.BookGenre;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -15,6 +19,9 @@ public class AuthorRepositoryTest {
 
     @Autowired
     AuthorRepository authorRepository;
+
+    @Autowired
+    BookRepository bookRepository;
 
     @Test
     public void saveTest() {
@@ -62,5 +69,39 @@ public class AuthorRepositoryTest {
         UUID id = UUID.fromString("bbd50f23-f5e0-4ad4-ab4d-e25f7c2f7dd0");
         Optional<Author> optionalAuthor = authorRepository.findById(id);
         optionalAuthor.ifPresent(savedAuthor -> authorRepository.delete(savedAuthor));
+    }
+
+    @Test
+    void saveAuthorWithBooksTest() {
+        Author author = new Author();
+        author.setName("Antonio");
+        author.setNationality("American");
+        author.setBirthDate(LocalDate.of(1970, 8, 5));
+
+        Book firstBook = new Book();
+        firstBook.setIsbn("23487-84874");
+        firstBook.setPrice(BigDecimal.valueOf(204));
+        firstBook.setGender(BookGenre.MISTERY);
+        firstBook.setTitle("The haunted house robbery");
+        firstBook.setPublicationDate(LocalDate.of(1999,1,2));
+        firstBook.setAuthor(author);
+
+        Book secondBook = new Book();
+        secondBook.setIsbn("23665-96564");
+        secondBook.setPrice(BigDecimal.valueOf(650));
+        secondBook.setGender(BookGenre.MISTERY);
+        secondBook.setTitle("The haunted house robbery 2");
+        secondBook.setPublicationDate(LocalDate.of(2000,1,2));
+        secondBook.setAuthor(author);
+
+//        author.setBooks(new ArrayList<>());
+//        author.getBooks().add(firstBook);
+//        author.getBooks().add(secondBook);
+
+        author.setBooks(List.of(firstBook, secondBook));
+
+        authorRepository.save(author);
+//        bookRepository.saveAll(author.getBooks());
+
     }
 }
