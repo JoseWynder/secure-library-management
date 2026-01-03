@@ -2,8 +2,11 @@ package io.github.josewynder.libraryapi.repository;
 
 import io.github.josewynder.libraryapi.model.Author;
 import io.github.josewynder.libraryapi.model.Book;
+import io.github.josewynder.libraryapi.model.BookGenre;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.math.BigDecimal;
@@ -54,12 +57,19 @@ public interface BookRepository extends JpaRepository<Book, UUID> {
 
 
     @Query("""
-        select b.gender 
+        select b.genre 
         from Book as b 
         join b.author as a 
         where a.nationality = 'Brazilian' 
-        order by b.gender 
+        order by b.genre 
     """)
     List<String> listGenresBooksBrazilianAuthors();
+
+    // Named parameters
+    @Query("select b from Book as b where b.genre = :genre")
+    List<Book> findByGenre(@Param("genre") BookGenre genre, Sort sort);
+
+    @Query("select b from Book as b where b.genre = ?2 and b.price > ?1")
+    List<Book> findByGenreWithPositionalParameters(BigDecimal price, BookGenre genre);
 
 }

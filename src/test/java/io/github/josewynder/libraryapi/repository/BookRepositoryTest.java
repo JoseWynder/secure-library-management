@@ -6,15 +6,13 @@ import io.github.josewynder.libraryapi.model.BookGenre;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.Sort;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 class BookRepositoryTest {
@@ -28,14 +26,14 @@ class BookRepositoryTest {
     @Test
     void saveTest() {
         Book book = new Book();
-        book.setIsbn("90887-84874");
-        book.setPrice(BigDecimal.valueOf(100));
-        book.setGender(BookGenre.FICTION);
-        book.setTitle("UFO");
-        book.setPublicationDate(LocalDate.of(1980,1,2));
+        book.setIsbn("94567-84874");
+        book.setPrice(BigDecimal.valueOf(200));
+        book.setGenre(BookGenre.FICTION);
+        book.setTitle("Who wants to be a millionaire?");
+        book.setPublicationDate(LocalDate.of(1975,1,2));
 
         Author author = authorRepository
-                .findById(UUID.fromString("ce77d0f1-71e4-4583-88bb-cb6970864b37"))
+                .findById(UUID.fromString("707c259e-72c9-48a2-aace-80cdefa56895"))
                 .orElse(null);
 
         book.setAuthor(author);
@@ -47,7 +45,7 @@ class BookRepositoryTest {
         Book book = new Book();
         book.setIsbn("90887-84874");
         book.setPrice(BigDecimal.valueOf(100));
-        book.setGender(BookGenre.FICTION);
+        book.setGenre(BookGenre.FICTION);
         book.setTitle("Another Book");
         book.setPublicationDate(LocalDate.of(1980,1,2));
 
@@ -65,7 +63,7 @@ class BookRepositoryTest {
         Book book = new Book();
         book.setIsbn("90887-84874");
         book.setPrice(BigDecimal.valueOf(100));
-        book.setGender(BookGenre.FICTION);
+        book.setGenre(BookGenre.FICTION);
         book.setTitle("Third Book");
         book.setPublicationDate(LocalDate.of(1980,1,2));
 
@@ -158,5 +156,17 @@ class BookRepositoryTest {
     void listGenresBooksBrazilianAuthorsUsingJPQLQueryTest() {
         List<String> genres = bookRepository.listGenresBooksBrazilianAuthors();
         genres.forEach(System.out::println);
+    }
+
+    @Test
+    void listGenreOrderByParameterTest() {
+        List<Book> books = bookRepository.findByGenre(BookGenre.FICTION, Sort.by("title"));
+        books.forEach(System.out::println);
+    }
+
+    @Test
+    void listGenreWithPositionalParameterTest() {
+        List<Book> books = bookRepository.findByGenreWithPositionalParameters(BigDecimal.valueOf(100L), BookGenre.FICTION);
+        books.forEach(System.out::println);
     }
 }

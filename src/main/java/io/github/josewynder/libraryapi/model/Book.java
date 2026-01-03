@@ -29,8 +29,8 @@ public class Book {
     private LocalDate publicationDate;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "gender", length = 30, nullable = false)
-    private BookGenre gender;
+    @Column(name = "genre", length = 30, nullable = false)
+    private BookGenre genre;
 
     @Column(name = "price", precision =  18, scale = 2)
     private BigDecimal price;

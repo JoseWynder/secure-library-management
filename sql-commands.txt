@@ -10,7 +10,7 @@ create table book(
 	isbn varchar(20) not null,
 	title varchar(150) not null,
 	publication_date date not null,
-	gender varchar(30) not null,
+	genre varchar(30) not null,
 	price numeric(18,2),
 	author_id uuid not null references author(id),
 	constraint chk_gender check (gender in ('FICTION', 'FANTASY', 'MISTERY', 'ROMANCE', 'BIOGRAPHY', 'SCIENCE'))

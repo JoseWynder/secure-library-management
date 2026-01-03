@@ -6,11 +6,9 @@ import io.github.josewynder.libraryapi.model.BookGenre;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -27,9 +25,9 @@ public class AuthorRepositoryTest {
     @Test
     public void saveTest() {
         Author author = new Author();
-        author.setName("Maria");
+        author.setName("José");
         author.setNationality("Brazilian");
-        author.setBirthDate(LocalDate.of(1951, 1, 31));
+        author.setBirthDate(LocalDate.of(1949, 1, 31));
 
         Author savedAuthor = authorRepository.save(author);
         System.out.println("Saved Author: " + savedAuthor);
@@ -82,7 +80,7 @@ public class AuthorRepositoryTest {
         Book firstBook = new Book();
         firstBook.setIsbn("23487-84874");
         firstBook.setPrice(BigDecimal.valueOf(204));
-        firstBook.setGender(BookGenre.MISTERY);
+        firstBook.setGenre(BookGenre.MISTERY);
         firstBook.setTitle("The haunted house robbery");
         firstBook.setPublicationDate(LocalDate.of(1999,1,2));
         firstBook.setAuthor(author);
@@ -90,7 +88,7 @@ public class AuthorRepositoryTest {
         Book secondBook = new Book();
         secondBook.setIsbn("23665-96564");
         secondBook.setPrice(BigDecimal.valueOf(650));
-        secondBook.setGender(BookGenre.MISTERY);
+        secondBook.setGenre(BookGenre.MISTERY);
         secondBook.setTitle("The haunted house robbery 2");
         secondBook.setPublicationDate(LocalDate.of(2000,1,2));
         secondBook.setAuthor(author);
