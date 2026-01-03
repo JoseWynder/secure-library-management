@@ -135,4 +135,28 @@ class BookRepositoryTest {
                 .findByTitleAndPrice("Third Book", BigDecimal.valueOf(100L));
         books.forEach(System.out::println);
     }
+
+    @Test
+    void listBooksUsingJPQLQueryTest() {
+        List<Book> books = bookRepository.listAllOrderByPriceAndTitle();
+        books.forEach(System.out::println);
+    }
+
+    @Test
+    void listAuthorsUsingJPQLQueryTest() {
+        List<Author> authors = bookRepository.listAllAuthorsFromTheBooks();
+        authors.forEach(System.out::println);
+    }
+
+    @Test
+    void listDistinctBookTitlesUsingJPQLQueryTest() {
+        List<String> titles = bookRepository.listDistinctBookTitles();
+        titles.forEach(System.out::println);
+    }
+
+    @Test
+    void listGenresBooksBrazilianAuthorsUsingJPQLQueryTest() {
+        List<String> genres = bookRepository.listGenresBooksBrazilianAuthors();
+        genres.forEach(System.out::println);
+    }
 }
