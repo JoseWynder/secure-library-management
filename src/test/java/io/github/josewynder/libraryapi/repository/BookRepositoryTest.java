@@ -9,6 +9,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.Optional;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -75,5 +76,29 @@ class BookRepositoryTest {
 
         book.setAuthor(author);
         bookRepository.save(book);
+    }
+
+    @Test
+    void updateBookAuthorTest(){
+        UUID idBook = UUID.fromString("d854ea5b-26cc-4f2e-9fe8-e94f19b9232d");
+        Book book = bookRepository.findById(idBook).orElseThrow();
+
+        UUID idAuthor = UUID.fromString("081de40a-3ac6-4791-8947-dd18450ff5f5");
+        Author newAuthor = authorRepository.findById(idAuthor).orElseThrow();
+        book.setAuthor(newAuthor);
+        bookRepository.save(book);
+
+    }
+
+    @Test
+    void deleteTest() {
+        UUID idBook = UUID.fromString("d854ea5b-26cc-4f2e-9fe8-e94f19b9232d");
+        bookRepository.deleteById(idBook);
+    }
+
+    @Test
+    void deleteCascadeTest() {
+        UUID idBook = UUID.fromString("01b4e868-83ef-43e1-9bdc-9c46e48669aa");
+        bookRepository.deleteById(idBook);
     }
 }
