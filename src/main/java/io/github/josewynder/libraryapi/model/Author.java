@@ -13,7 +13,7 @@ import java.util.UUID;
 @Table(name = "author", schema = "public")
 @Getter
 @Setter
-@ToString
+@ToString(exclude = "books")
 public class Author {
 
     @Deprecated
@@ -41,6 +41,6 @@ public class Author {
     @Column(name = "nationality", length = 50, nullable = false)
     private String nationality;
 
-    @OneToMany(mappedBy = "author", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "author", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Book> books;
 }
