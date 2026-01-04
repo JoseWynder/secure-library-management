@@ -21,4 +21,9 @@ public class TransactionsTest {
         transactionService.execute();
     }
 
+    @Test
+    void transactionManagedStateTest() {
+        transactionService.updateWithoutUpdating();
+    }
+
 }
