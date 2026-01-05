@@ -1,8 +1,10 @@
 package io.github.josewynder.libraryapi.service;
 
 import io.github.josewynder.libraryapi.controller.dto.AuthorDTO;
+import io.github.josewynder.libraryapi.exceptions.OperationNotPermittedException;
 import io.github.josewynder.libraryapi.model.Author;
 import io.github.josewynder.libraryapi.repository.AuthorRepository;
+import io.github.josewynder.libraryapi.repository.BookRepository;
 import io.github.josewynder.libraryapi.validator.AuthorValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -15,10 +17,12 @@ import java.util.UUID;
 public class AuthorService {
 
     private final AuthorRepository authorRepository;
+    private final BookRepository bookRepository;
     private final AuthorValidator authorValidator;
 
-    public AuthorService(AuthorRepository authorRepository, AuthorValidator authorValidator) {
+    public AuthorService(AuthorRepository authorRepository, BookRepository bookRepository, AuthorValidator authorValidator) {
         this.authorRepository = authorRepository;
+        this.bookRepository = bookRepository;
         this.authorValidator = authorValidator;
     }
 
@@ -31,8 +35,12 @@ public class AuthorService {
         return authorRepository.findById(id);
     }
 
-    public void deleteById(UUID id) {
-        authorRepository.deleteById(id);
+    public void deleteById(Author author) {
+        if(haveABook(author)) {
+            throw new OperationNotPermittedException(
+                    "You are not allowed to delete an author who has books registered!");
+        }
+        authorRepository.delete(author);
     }
 
     public List<Author> searchByNameAndNationality(String name, String nationality) {
@@ -56,5 +64,9 @@ public class AuthorService {
 
         authorValidator.validate(author);
         authorRepository.save(author);
+    }
+
+    public boolean haveABook(Author author) {
+        return bookRepository.existsByAuthor(author);
     }
 }

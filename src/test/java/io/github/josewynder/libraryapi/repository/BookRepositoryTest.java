@@ -33,7 +33,7 @@ class BookRepositoryTest {
         book.setPublicationDate(LocalDate.of(1975,1,2));
 
         Author author = authorRepository
-                .findById(UUID.fromString("707c259e-72c9-48a2-aace-80cdefa56895"))
+                .findById(UUID.fromString("f5e1e06c-80ad-4b71-817c-ba953c29d95f"))
                 .orElse(null);
 
         book.setAuthor(author);

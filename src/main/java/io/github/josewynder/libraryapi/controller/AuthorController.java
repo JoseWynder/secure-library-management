@@ -3,6 +3,7 @@ package io.github.josewynder.libraryapi.controller;
 import io.github.josewynder.libraryapi.controller.dto.AuthorDTO;
 import io.github.josewynder.libraryapi.controller.dto.ResponseError;
 import io.github.josewynder.libraryapi.exceptions.DuplicateRegistrationException;
+import io.github.josewynder.libraryapi.exceptions.OperationNotPermittedException;
 import io.github.josewynder.libraryapi.model.Author;
 import io.github.josewynder.libraryapi.service.AuthorService;
 import org.springframework.http.ResponseEntity;
@@ -59,13 +60,20 @@ public class AuthorController {
 
     // idempotent
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteById(@PathVariable String id) {
-        UUID uuid = UUID.fromString(id);
-        if(authorService.findById(uuid).isEmpty()) {
-            return ResponseEntity.notFound().build();
+    public ResponseEntity<Object> deleteById(@PathVariable String id) {
+        try {
+            UUID uuid = UUID.fromString(id);
+            Optional<Author> authorOptional = authorService.findById(uuid);
+            if (authorOptional.isEmpty()) {
+                return ResponseEntity.notFound().build();
+            }
+            Author author = authorOptional.get();
+            authorService.deleteById(author);
+            return ResponseEntity.noContent().build();
+        } catch (OperationNotPermittedException onpe) {
+            var responseError =  ResponseError.defaultAnswer(onpe.getMessage());
+            return ResponseEntity.status(responseError.status()).body(responseError);
         }
-        authorService.deleteById(uuid);
-        return ResponseEntity.noContent().build();
     }
 
     @GetMapping
@@ -78,21 +86,26 @@ public class AuthorController {
     }
 
     @PutMapping("{id}")
-    public ResponseEntity<Void> updateById(@PathVariable String id, @RequestBody AuthorDTO authorDTO) {
-        UUID uuid = UUID.fromString(id);
-        Optional<Author> authorOptional = authorService.findById(uuid);
+    public ResponseEntity<Object> updateById(@PathVariable String id, @RequestBody AuthorDTO authorDTO) {
+        try {
+            UUID uuid = UUID.fromString(id);
+            Optional<Author> authorOptional = authorService.findById(uuid);
 
-        if(authorOptional.isEmpty()) {
-            return ResponseEntity.notFound().build();
+            if (authorOptional.isEmpty()) {
+                return ResponseEntity.notFound().build();
+            }
+
+            Author author = authorOptional.get();
+
+            author.setName(authorDTO.name());
+            author.setBirthDate(authorDTO.birthDate());
+            author.setNationality(authorDTO.nationality());
+            authorService.updateById(author);
+
+            return ResponseEntity.noContent().build();
+        } catch (DuplicateRegistrationException dre) {
+            var errorDTO = ResponseError.conflict(dre.getMessage());
+            return ResponseEntity.status(errorDTO.status()).body(errorDTO);
         }
-
-        Author author = authorOptional.get();
-
-        author.setName(authorDTO.name());
-        author.setBirthDate(authorDTO.birthDate());
-        author.setNationality(authorDTO.nationality());
-        authorService.updateById(author);
-
-        return  ResponseEntity.noContent().build();
     }
 }
