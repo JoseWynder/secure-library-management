@@ -1,6 +1,8 @@
 package io.github.josewynder.libraryapi.controller;
 
 import io.github.josewynder.libraryapi.controller.dto.AuthorDTO;
+import io.github.josewynder.libraryapi.controller.dto.ResponseError;
+import io.github.josewynder.libraryapi.exceptions.DuplicateRegistrationException;
 import io.github.josewynder.libraryapi.model.Author;
 import io.github.josewynder.libraryapi.service.AuthorService;
 import org.springframework.http.ResponseEntity;
@@ -24,18 +26,23 @@ public class AuthorController {
     }
 
     @PostMapping
-    public ResponseEntity<Void> save(@RequestBody AuthorDTO author) {
-        Author authorEntity = author.mapToAuthor(author);
-        authorService.save(authorEntity);
+    public ResponseEntity<Object> save(@RequestBody AuthorDTO author) {
+        try {
+            Author authorEntity = author.mapToAuthor(author);
+            authorService.save(authorEntity);
 
-        // http://localhost:8080/authors/{id}
-        URI location = ServletUriComponentsBuilder
-                .fromCurrentRequest()
-                .path("/{id}")
-                .buildAndExpand(authorEntity.getId())
-                .toUri();
+            // http://localhost:8080/authors/{id}
+            URI location = ServletUriComponentsBuilder
+                    .fromCurrentRequest()
+                    .path("/{id}")
+                    .buildAndExpand(authorEntity.getId())
+                    .toUri();
 
-        return ResponseEntity.created(location).build();
+            return ResponseEntity.created(location).build();
+        } catch (DuplicateRegistrationException dre) {
+            var errorDTO = ResponseError.conflict(dre.getMessage());
+            return ResponseEntity.status(errorDTO.status()).body(errorDTO);
+        }
     }
 
     @GetMapping("/{id}")

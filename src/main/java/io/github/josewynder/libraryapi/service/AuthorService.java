@@ -3,6 +3,7 @@ package io.github.josewynder.libraryapi.service;
 import io.github.josewynder.libraryapi.controller.dto.AuthorDTO;
 import io.github.josewynder.libraryapi.model.Author;
 import io.github.josewynder.libraryapi.repository.AuthorRepository;
+import io.github.josewynder.libraryapi.validator.AuthorValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -13,13 +14,16 @@ import java.util.UUID;
 @Service
 public class AuthorService {
 
-    private AuthorRepository authorRepository;
+    private final AuthorRepository authorRepository;
+    private final AuthorValidator authorValidator;
 
-    public AuthorService(AuthorRepository authorRepository) {
+    public AuthorService(AuthorRepository authorRepository, AuthorValidator authorValidator) {
         this.authorRepository = authorRepository;
+        this.authorValidator = authorValidator;
     }
 
     public Author save(Author author) {
+        authorValidator.validate(author);
         return authorRepository.save(author);
     }
 
@@ -49,6 +53,8 @@ public class AuthorService {
         if(author.getId() == null) {
             throw new IllegalArgumentException("Author id must not be null");
         }
+
+        authorValidator.validate(author);
         authorRepository.save(author);
     }
 }
