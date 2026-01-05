@@ -3,9 +3,11 @@ package io.github.josewynder.libraryapi.controller.dto;
 import io.github.josewynder.libraryapi.model.Author;
 
 import java.time.LocalDate;
+import java.util.UUID;
 
 // Data Transfer Object
 public record AuthorDTO(
+        UUID id,
         String name,
         LocalDate birthDate,
         String nationality) {
@@ -16,5 +18,13 @@ public record AuthorDTO(
         author.setBirthDate(birthDate);
         author.setNationality(nationality);
         return author;
+    }
+
+    public static AuthorDTO mapToAuthorDTO(Author author) {
+        return new AuthorDTO(
+                author.getId(),
+                author.getName(),
+                author.getBirthDate(),
+                author.getNationality());
     }
 }

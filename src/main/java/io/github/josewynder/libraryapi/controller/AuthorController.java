@@ -3,15 +3,13 @@ package io.github.josewynder.libraryapi.controller;
 import io.github.josewynder.libraryapi.controller.dto.AuthorDTO;
 import io.github.josewynder.libraryapi.model.Author;
 import io.github.josewynder.libraryapi.service.AuthorService;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
+import java.util.Optional;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/authors")
@@ -37,5 +35,17 @@ public class AuthorController {
                 .toUri();
 
         return ResponseEntity.created(location).build();
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<AuthorDTO> getDetails(@PathVariable String id) {
+        UUID uuid = UUID.fromString(id);
+        Optional<Author> authorOptional = authorService.findById(uuid);
+        if (authorOptional.isPresent()) {
+            Author author = authorOptional.get();
+            AuthorDTO authorDTO = AuthorDTO.mapToAuthorDTO(author);
+            return ResponseEntity.ok(authorDTO);
+        }
+        return ResponseEntity.notFound().build();
     }
 }
