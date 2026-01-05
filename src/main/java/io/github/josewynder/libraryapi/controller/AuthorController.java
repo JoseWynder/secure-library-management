@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -58,5 +59,14 @@ public class AuthorController {
         }
         authorService.deleteById(uuid);
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping
+    public ResponseEntity<List<AuthorDTO>> searchByNameAndNationality(
+            @RequestParam(required = false) String name,
+            @RequestParam(required = false) String nationality) {
+        List<Author> authors = authorService.searchByNameAndNationality(name, nationality);
+        List<AuthorDTO> authorDTOS = AuthorDTO.mapToAuthorDTOList(authors);
+        return ResponseEntity.ok(authorDTOS);
     }
 }

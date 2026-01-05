@@ -1,10 +1,12 @@
 package io.github.josewynder.libraryapi.service;
 
+import io.github.josewynder.libraryapi.controller.dto.AuthorDTO;
 import io.github.josewynder.libraryapi.model.Author;
 import io.github.josewynder.libraryapi.repository.AuthorRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -27,5 +29,19 @@ public class AuthorService {
 
     public void deleteById(UUID id) {
         authorRepository.deleteById(id);
+    }
+
+    public List<Author> searchByNameAndNationality(String name, String nationality) {
+        if(name != null && nationality != null) {
+            return authorRepository.findByNameAndNationality(name, nationality);
+        }
+        if (name != null) {
+            return authorRepository.findByName(name);
+        }
+        if(nationality != null) {
+            return authorRepository.findByNationality(nationality);
+        }
+
+        return authorRepository.findAll();
     }
 }
