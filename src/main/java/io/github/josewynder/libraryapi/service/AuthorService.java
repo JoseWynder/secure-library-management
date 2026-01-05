@@ -24,4 +24,8 @@ public class AuthorService {
     public Optional<Author> findById(UUID id) {
         return authorRepository.findById(id);
     }
+
+    public void deleteById(UUID id) {
+        authorRepository.deleteById(id);
+    }
 }
