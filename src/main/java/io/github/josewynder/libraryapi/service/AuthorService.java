@@ -44,4 +44,11 @@ public class AuthorService {
 
         return authorRepository.findAll();
     }
+
+    public void updateById(Author author) {
+        if(author.getId() == null) {
+            throw new IllegalArgumentException("Author id must not be null");
+        }
+        authorRepository.save(author);
+    }
 }
