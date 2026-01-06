@@ -6,6 +6,7 @@ import io.github.josewynder.libraryapi.model.Author;
 import io.github.josewynder.libraryapi.repository.AuthorRepository;
 import io.github.josewynder.libraryapi.repository.BookRepository;
 import io.github.josewynder.libraryapi.validator.AuthorValidator;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -14,17 +15,12 @@ import java.util.Optional;
 import java.util.UUID;
 
 @Service
+@RequiredArgsConstructor
 public class AuthorService {
 
     private final AuthorRepository authorRepository;
     private final BookRepository bookRepository;
     private final AuthorValidator authorValidator;
-
-    public AuthorService(AuthorRepository authorRepository, BookRepository bookRepository, AuthorValidator authorValidator) {
-        this.authorRepository = authorRepository;
-        this.bookRepository = bookRepository;
-        this.authorValidator = authorValidator;
-    }
 
     public Author save(Author author) {
         authorValidator.validate(author);
