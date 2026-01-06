@@ -4,7 +4,7 @@ import org.springframework.http.HttpStatus;
 
 import java.util.List;
 
-public record ResponseError(int status, String message, List<FieldError> fieldErrors) {
+public record ResponseError(int status, String message, List<ErrorField> fieldErrors) {
 
     public static ResponseError defaultAnswer(String message) {
         return new ResponseError(

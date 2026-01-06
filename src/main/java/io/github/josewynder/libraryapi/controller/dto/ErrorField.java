@@ -1,4 +1,4 @@
 package io.github.josewynder.libraryapi.controller.dto;
 
-public record FieldError(String field, String error) {
+public record ErrorField(String field, String error) {
 }
