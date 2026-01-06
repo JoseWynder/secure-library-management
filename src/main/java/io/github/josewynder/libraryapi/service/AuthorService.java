@@ -8,6 +8,8 @@ import io.github.josewynder.libraryapi.repository.BookRepository;
 import io.github.josewynder.libraryapi.validator.AuthorValidator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Example;
+import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -51,6 +53,21 @@ public class AuthorService {
         }
 
         return authorRepository.findAll();
+    }
+
+    public List<Author> searchByExample(String name, String nationality) {
+        Author author = new Author();
+        author.setName(name);
+        author.setNationality(nationality);
+
+        ExampleMatcher matcher = ExampleMatcher
+                .matching()
+                .withIgnorePaths("id", "birthDate", "registrationDate")
+                .withIgnoreNullValues()
+                .withIgnoreCase()
+                .withStringMatcher(ExampleMatcher.StringMatcher.CONTAINING);
+        Example<Author> authorExample = Example.of(author, matcher);
+        return authorRepository.findAll(authorExample);
     }
 
     public void updateById(Author author) {

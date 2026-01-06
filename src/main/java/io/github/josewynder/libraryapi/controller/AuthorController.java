@@ -79,13 +79,13 @@ public class AuthorController {
     public ResponseEntity<List<AuthorDTO>> searchByNameAndNationality(
             @RequestParam(required = false) String name,
             @RequestParam(required = false) String nationality) {
-        List<Author> authors = authorService.searchByNameAndNationality(name, nationality);
+        List<Author> authors = authorService.searchByExample(name, nationality);
         List<AuthorDTO> authorDTOS = AuthorDTO.mapToAuthorDTOList(authors);
         return ResponseEntity.ok(authorDTOS);
     }
 
     @PutMapping("{id}")
-    public ResponseEntity<Object> updateById(@PathVariable String id, @RequestBody AuthorDTO authorDTO) {
+    public ResponseEntity<Object> updateById(@PathVariable String id, @RequestBody @Valid AuthorDTO authorDTO) {
         try {
             UUID uuid = UUID.fromString(id);
             Optional<Author> authorOptional = authorService.findById(uuid);
