@@ -28,16 +28,11 @@ public class AuthorController implements GenericController {
     private final AuthorMapper authorMapper;
 
     @PostMapping
-    public ResponseEntity<Object> save(@RequestBody @Valid AuthorDTO dto) {
-        try {
-            Author author = authorMapper.toEntity(dto);
-            authorService.save(author);
-            URI location = getHeaderLocation(author.getId());
-            return ResponseEntity.created(location).build();
-        } catch (DuplicateRegistrationException dre) {
-            var errorDTO = ResponseError.conflict(dre.getMessage());
-            return ResponseEntity.status(errorDTO.status()).body(errorDTO);
-        }
+    public ResponseEntity<Void> save(@RequestBody @Valid AuthorDTO dto) {
+        Author author = authorMapper.toEntity(dto);
+        authorService.save(author);
+        URI location = getHeaderLocation(author.getId());
+        return ResponseEntity.created(location).build();
     }
 
     @GetMapping("/{id}")
@@ -50,25 +45,20 @@ public class AuthorController implements GenericController {
                 .map(author -> {
                     AuthorDTO authorDTO = authorMapper.toDTO(author);
                     return ResponseEntity.ok(authorDTO);
-        }).orElseGet(() -> ResponseEntity.notFound().build());
+                }).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     // idempotent
     @DeleteMapping("/{id}")
-    public ResponseEntity<Object> deleteById(@PathVariable String id) {
-        try {
-            UUID uuid = UUID.fromString(id);
-            Optional<Author> authorOptional = authorService.findById(uuid);
-            if (authorOptional.isEmpty()) {
-                return ResponseEntity.notFound().build();
-            }
-            Author author = authorOptional.get();
-            authorService.deleteById(author);
-            return ResponseEntity.noContent().build();
-        } catch (OperationNotPermittedException e) {
-            var responseError =  ResponseError.defaultAnswer(e.getMessage());
-            return ResponseEntity.status(responseError.status()).body(responseError);
+    public ResponseEntity<Void> deleteById(@PathVariable String id) {
+        UUID uuid = UUID.fromString(id);
+        Optional<Author> authorOptional = authorService.findById(uuid);
+        if (authorOptional.isEmpty()) {
+            return ResponseEntity.notFound().build();
         }
+        Author author = authorOptional.get();
+        authorService.deleteById(author);
+        return ResponseEntity.noContent().build();
     }
 
     @GetMapping
@@ -84,26 +74,21 @@ public class AuthorController implements GenericController {
     }
 
     @PutMapping("{id}")
-    public ResponseEntity<Object> updateById(@PathVariable String id, @RequestBody @Valid AuthorDTO authorDTO) {
-        try {
-            UUID uuid = UUID.fromString(id);
-            Optional<Author> authorOptional = authorService.findById(uuid);
+    public ResponseEntity<Void> updateById(@PathVariable String id, @RequestBody @Valid AuthorDTO authorDTO) {
+        UUID uuid = UUID.fromString(id);
+        Optional<Author> authorOptional = authorService.findById(uuid);
 
-            if (authorOptional.isEmpty()) {
-                return ResponseEntity.notFound().build();
-            }
-
-            Author author = authorOptional.get();
-
-            author.setName(authorDTO.name());
-            author.setBirthDate(authorDTO.birthDate());
-            author.setNationality(authorDTO.nationality());
-            authorService.updateById(author);
-
-            return ResponseEntity.noContent().build();
-        } catch (DuplicateRegistrationException dre) {
-            var errorDTO = ResponseError.conflict(dre.getMessage());
-            return ResponseEntity.status(errorDTO.status()).body(errorDTO);
+        if (authorOptional.isEmpty()) {
+            return ResponseEntity.notFound().build();
         }
+
+        Author author = authorOptional.get();
+
+        author.setName(authorDTO.name());
+        author.setBirthDate(authorDTO.birthDate());
+        author.setNationality(authorDTO.nationality());
+        authorService.updateById(author);
+
+        return ResponseEntity.noContent().build();
     }
 }

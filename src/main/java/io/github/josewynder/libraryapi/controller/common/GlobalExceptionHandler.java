@@ -2,6 +2,8 @@ package io.github.josewynder.libraryapi.controller.common;
 
 import io.github.josewynder.libraryapi.controller.dto.ErrorField;
 import io.github.josewynder.libraryapi.controller.dto.ResponseError;
+import io.github.josewynder.libraryapi.exceptions.DuplicateRegistrationException;
+import io.github.josewynder.libraryapi.exceptions.OperationNotPermittedException;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -27,5 +29,23 @@ public class GlobalExceptionHandler {
                 HttpStatus.UNPROCESSABLE_ENTITY.value(),
                 "Validation Error",
                 errorList);
+    }
+
+    @ExceptionHandler(DuplicateRegistrationException.class)
+    @ResponseStatus(HttpStatus.CONFLICT)
+    public ResponseError handleDuplicateRegistrationException(DuplicateRegistrationException e) {
+        return ResponseError.conflict(e.getMessage());
+    }
+
+    @ExceptionHandler(OperationNotPermittedException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ResponseError handleOperationNotPermittedException(OperationNotPermittedException e) {
+        return ResponseError.defaultAnswer(e.getMessage());
+    }
+
+    @ExceptionHandler(RuntimeException.class)
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    public ResponseError handleUnhandledErrors(RuntimeException e) {
+        return new ResponseError(HttpStatus.INTERNAL_SERVER_ERROR.value(), "An unexpected error occurred. Please contact management.", List.of());
     }
 }

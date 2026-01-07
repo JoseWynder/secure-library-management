@@ -25,20 +25,10 @@ public class BookController implements GenericController {
     private final BookMapper bookMapper;
 
     @PostMapping
-    public ResponseEntity<Object> save(@RequestBody @Valid BookRequestDTO dto) {
-        try {
-            Book book = bookMapper.toEntity(dto);
-            bookService.save(book);
-            URI location = getHeaderLocation(book.getId());
-            return ResponseEntity.created(location).build();
-        } catch (DuplicateRegistrationException e) {
-            ResponseError errorDTO = ResponseError.conflict(e.getMessage());
-            return ResponseEntity.status(errorDTO.status()).body(errorDTO);
-        }
-
-        // map dto to entity
-        // send the entity to service to validate and saving in the database
-        // create a url to access the book data
-        // return code created with header location
+    public ResponseEntity<Void> save(@RequestBody @Valid BookRequestDTO dto) {
+        Book book = bookMapper.toEntity(dto);
+        bookService.save(book);
+        URI location = getHeaderLocation(book.getId());
+        return ResponseEntity.created(location).build();
     }
 }
