@@ -2,6 +2,7 @@ package io.github.josewynder.libraryapi.controller;
 
 import io.github.josewynder.libraryapi.controller.dto.AuthorDTO;
 import io.github.josewynder.libraryapi.controller.dto.ResponseError;
+import io.github.josewynder.libraryapi.controller.mappers.AuthorMapper;
 import io.github.josewynder.libraryapi.exceptions.DuplicateRegistrationException;
 import io.github.josewynder.libraryapi.exceptions.OperationNotPermittedException;
 import io.github.josewynder.libraryapi.model.Author;
@@ -24,18 +25,19 @@ import java.util.UUID;
 public class AuthorController {
 
     private final AuthorService authorService;
+    private final AuthorMapper authorMapper;
 
     @PostMapping
-    public ResponseEntity<Object> save(@RequestBody @Valid AuthorDTO author) {
+    public ResponseEntity<Object> save(@RequestBody @Valid AuthorDTO dto) {
         try {
-            Author authorEntity = author.mapToAuthor(author);
-            authorService.save(authorEntity);
+            Author author = authorMapper.toEntity(dto);
+            authorService.save(author);
 
             // http://localhost:8080/authors/{id}
             URI location = ServletUriComponentsBuilder
                     .fromCurrentRequest()
                     .path("/{id}")
-                    .buildAndExpand(authorEntity.getId())
+                    .buildAndExpand(author.getId())
                     .toUri();
 
             return ResponseEntity.created(location).build();
@@ -49,12 +51,13 @@ public class AuthorController {
     public ResponseEntity<AuthorDTO> getDetails(@PathVariable String id) {
         UUID uuid = UUID.fromString(id);
         Optional<Author> authorOptional = authorService.findById(uuid);
-        if (authorOptional.isPresent()) {
-            Author author = authorOptional.get();
-            AuthorDTO authorDTO = AuthorDTO.mapToAuthorDTO(author);
-            return ResponseEntity.ok(authorDTO);
-        }
-        return ResponseEntity.notFound().build();
+
+        return authorService
+                .findById(uuid)
+                .map(author -> {
+                    AuthorDTO authorDTO = authorMapper.toDTO(author);
+                    return ResponseEntity.ok(authorDTO);
+        }).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     // idempotent
@@ -69,8 +72,8 @@ public class AuthorController {
             Author author = authorOptional.get();
             authorService.deleteById(author);
             return ResponseEntity.noContent().build();
-        } catch (OperationNotPermittedException onpe) {
-            var responseError =  ResponseError.defaultAnswer(onpe.getMessage());
+        } catch (OperationNotPermittedException e) {
+            var responseError =  ResponseError.defaultAnswer(e.getMessage());
             return ResponseEntity.status(responseError.status()).body(responseError);
         }
     }
@@ -80,7 +83,10 @@ public class AuthorController {
             @RequestParam(required = false) String name,
             @RequestParam(required = false) String nationality) {
         List<Author> authors = authorService.searchByExample(name, nationality);
-        List<AuthorDTO> authorDTOS = AuthorDTO.mapToAuthorDTOList(authors);
+        List<AuthorDTO> authorDTOS = authors
+                .stream()
+                .map(authorMapper::toDTO)
+                .toList();
         return ResponseEntity.ok(authorDTOS);
     }
 
