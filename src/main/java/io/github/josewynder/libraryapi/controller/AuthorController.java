@@ -1,17 +1,13 @@
 package io.github.josewynder.libraryapi.controller;
 
 import io.github.josewynder.libraryapi.controller.dto.AuthorDTO;
-import io.github.josewynder.libraryapi.controller.dto.ResponseError;
 import io.github.josewynder.libraryapi.controller.mappers.AuthorMapper;
-import io.github.josewynder.libraryapi.exceptions.DuplicateRegistrationException;
-import io.github.josewynder.libraryapi.exceptions.OperationNotPermittedException;
 import io.github.josewynder.libraryapi.model.Author;
 import io.github.josewynder.libraryapi.service.AuthorService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
 import java.util.List;
@@ -57,7 +53,7 @@ public class AuthorController implements GenericController {
             return ResponseEntity.notFound().build();
         }
         Author author = authorOptional.get();
-        authorService.deleteById(author);
+        authorService.delete(author);
         return ResponseEntity.noContent().build();
     }
 
