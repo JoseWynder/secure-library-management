@@ -1,20 +1,17 @@
 package io.github.josewynder.libraryapi.controller;
 
 import io.github.josewynder.libraryapi.controller.dto.BookRequestDTO;
-import io.github.josewynder.libraryapi.controller.dto.ResponseError;
+import io.github.josewynder.libraryapi.controller.dto.BookResponseDTO;
 import io.github.josewynder.libraryapi.controller.mappers.BookMapper;
-import io.github.josewynder.libraryapi.exceptions.DuplicateRegistrationException;
 import io.github.josewynder.libraryapi.model.Book;
 import io.github.josewynder.libraryapi.service.BookService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/books")
@@ -25,10 +22,21 @@ public class BookController implements GenericController {
     private final BookMapper bookMapper;
 
     @PostMapping
-    public ResponseEntity<Void> save(@RequestBody @Valid BookRequestDTO dto) {
+    public ResponseEntity<Book> save(@RequestBody @Valid BookRequestDTO dto) {
         Book book = bookMapper.toEntity(dto);
-        bookService.save(book);
+        Book savedBook = bookService.save(book);
         URI location = getHeaderLocation(book.getId());
-        return ResponseEntity.created(location).build();
+        return ResponseEntity.created(location).body(savedBook);
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<BookResponseDTO> getDetails(
+            @PathVariable String id) {
+        return bookService
+                .findById(UUID.fromString(id))
+                .map( book -> {
+                    BookResponseDTO bookResponseDTO = bookMapper.toDTO(book);
+                    return ResponseEntity.ok(bookResponseDTO);
+                }).orElseGet(() -> ResponseEntity.notFound().build());
     }
 }

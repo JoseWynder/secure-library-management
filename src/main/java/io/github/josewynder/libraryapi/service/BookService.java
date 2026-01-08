@@ -5,6 +5,9 @@ import io.github.josewynder.libraryapi.repository.BookRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+import java.util.UUID;
+
 @Service
 @RequiredArgsConstructor
 public class BookService {
@@ -16,4 +19,7 @@ public class BookService {
         return book;
     }
 
+    public Optional<Book> findById(UUID id) {
+        return bookRepository.findById(id);
+    }
 }
