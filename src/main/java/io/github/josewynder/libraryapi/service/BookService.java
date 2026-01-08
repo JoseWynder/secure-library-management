@@ -3,6 +3,7 @@ package io.github.josewynder.libraryapi.service;
 import io.github.josewynder.libraryapi.model.Book;
 import io.github.josewynder.libraryapi.model.BookGenre;
 import io.github.josewynder.libraryapi.repository.BookRepository;
+import io.github.josewynder.libraryapi.repository.specifications.BookSpecs;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
@@ -11,6 +12,8 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+
+import static io.github.josewynder.libraryapi.repository.specifications.BookSpecs.*;
 
 @Service
 @RequiredArgsConstructor
@@ -31,8 +34,35 @@ public class BookService {
         bookRepository.delete(book);
     }
 
-    public List<Book> search(String isbn, String authorName, BookGenre genre, LocalDate birthDate) {
-        Specification<Book> specification = null;
+    public List<Book> search(String isbn, String title, String authorName,
+                             BookGenre genre, Integer publicationDate) {
+
+        // select * from book where isbn = :isbn and author_name...
+
+//        Specification<Book> specs = Specification
+//                .where(BookSpecs.isbnEqual(isbn))
+//                .and(BookSpecs.titleLike(title))
+//                .and(BookSpecs.genreEqual(genre))
+//                ;
+
+        Specification<Book> specification = Specification
+                        .anyOf((
+                                root,
+                                query,
+                                cb)
+                                -> cb.conjunction());
+        if(isbn != null){
+            specification = specification.and(isbnEqual(isbn));
+        }
+
+        if(title != null){
+            specification = specification.and(titleLike(title));
+        }
+
+        if(genre != null){
+            specification = specification.and(genreEqual(genre));
+        }
+
         return bookRepository.findAll(specification);
     }
 
