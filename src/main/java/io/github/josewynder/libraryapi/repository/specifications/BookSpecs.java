@@ -21,4 +21,15 @@ public class BookSpecs {
         return (root, query, cb)
                 -> cb.equal(root.get("genre"), genre);
     }
+
+    public static Specification<Book> yearEqual(Integer publicationYear){
+        // and to_char(publication_date, 'YYYY') = :publicationYear
+        return (root, query, cb)
+                -> cb.equal(cb.function(
+                        "to_char",
+                        String.class,
+                        root.get("publicationDate"),
+                        cb.literal("YYYY")),
+                publicationYear.toString());
+    }
 }

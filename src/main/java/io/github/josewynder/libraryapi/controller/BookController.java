@@ -5,6 +5,7 @@ import io.github.josewynder.libraryapi.controller.dto.BookResponseDTO;
 import io.github.josewynder.libraryapi.controller.dto.ResponseError;
 import io.github.josewynder.libraryapi.controller.mappers.BookMapper;
 import io.github.josewynder.libraryapi.model.Book;
+import io.github.josewynder.libraryapi.model.BookGenre;
 import io.github.josewynder.libraryapi.service.BookService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -16,6 +17,7 @@ import java.net.URI;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/books")
@@ -52,6 +54,28 @@ public class BookController implements GenericController {
                     bookService.delete(book);
                     return ResponseEntity.noContent().build();
                 }).orElseGet(() -> ResponseEntity.notFound().build());
+    }
+
+    @GetMapping
+    public ResponseEntity<List<BookResponseDTO>> search(
+            @RequestParam(value = "isbn", required = false)
+            String isbn,
+            @RequestParam(value = "title", required = false)
+            String title,
+            @RequestParam(value = "author-name", required = false)
+            String authorName,
+            @RequestParam(value = "genre", required = false)
+            BookGenre genre,
+            @RequestParam(value = "publication-year", required = false)
+            Integer publicationYear
+    ) {
+        List<Book> books = bookService
+                .search(isbn, title, authorName, genre, publicationYear);
+        List<BookResponseDTO> list = books
+                        .stream()
+                        .map(bookMapper::toDTO)
+                        .toList();
+        return ResponseEntity.ok(list);
     }
 
 }

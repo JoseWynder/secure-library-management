@@ -35,7 +35,7 @@ public class BookService {
     }
 
     public List<Book> search(String isbn, String title, String authorName,
-                             BookGenre genre, Integer publicationDate) {
+                             BookGenre genre, Integer publicationYear) {
 
         // select * from book where isbn = :isbn and author_name...
 
@@ -61,6 +61,10 @@ public class BookService {
 
         if(genre != null){
             specification = specification.and(genreEqual(genre));
+        }
+
+        if(publicationYear != null){
+            specification = specification.and(yearEqual(publicationYear));
         }
 
         return bookRepository.findAll(specification);
