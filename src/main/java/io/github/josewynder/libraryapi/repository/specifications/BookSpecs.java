@@ -2,6 +2,8 @@ package io.github.josewynder.libraryapi.repository.specifications;
 
 import io.github.josewynder.libraryapi.model.Book;
 import io.github.josewynder.libraryapi.model.BookGenre;
+import jakarta.persistence.criteria.Join;
+import jakarta.persistence.criteria.JoinType;
 import org.springframework.data.jpa.domain.Specification;
 
 public class BookSpecs {
@@ -31,5 +33,17 @@ public class BookSpecs {
                         root.get("publicationDate"),
                         cb.literal("YYYY")),
                 publicationYear.toString());
+    }
+
+    public static Specification<Book> authorNameLike(String name){
+        // select * from book b
+        //join author a on a.id = b.author_id
+        //where upper(a.name) like upper('%Author%');
+        return (root, query, cb) -> {
+            Join<Object, Object> joinAuthor = root.join("author", JoinType.INNER);
+            return cb.like(cb.upper(joinAuthor.get("name")), "%" + name.toUpperCase() + "%");
+
+//            return cb.like(cb.upper(root.get("author").get("name")), "%" + name.toUpperCase() + "%");
+        };
     }
 }
