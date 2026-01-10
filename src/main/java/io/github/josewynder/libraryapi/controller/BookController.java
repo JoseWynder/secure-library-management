@@ -28,11 +28,11 @@ public class BookController implements GenericController {
     private final BookMapper bookMapper;
 
     @PostMapping
-    public ResponseEntity<Book> save(@RequestBody @Valid BookRequestDTO dto) {
+    public ResponseEntity<Void> save(@RequestBody @Valid BookRequestDTO dto) {
         Book book = bookMapper.toEntity(dto);
         Book savedBook = bookService.save(book);
         URI location = getHeaderLocation(book.getId());
-        return ResponseEntity.created(location).body(savedBook);
+        return ResponseEntity.created(location).build();
     }
 
     @GetMapping("/{id}")

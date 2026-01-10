@@ -3,12 +3,11 @@ package io.github.josewynder.libraryapi.service;
 import io.github.josewynder.libraryapi.model.Book;
 import io.github.josewynder.libraryapi.model.BookGenre;
 import io.github.josewynder.libraryapi.repository.BookRepository;
-import io.github.josewynder.libraryapi.repository.specifications.BookSpecs;
+import io.github.josewynder.libraryapi.validator.BookValidator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -20,8 +19,10 @@ import static io.github.josewynder.libraryapi.repository.specifications.BookSpec
 public class BookService {
 
     private final BookRepository bookRepository;
+    private final BookValidator bookValidator;
 
     public Book save(Book book) {
+        bookValidator.validate(book);
         bookRepository.save(book);
         return book;
     }
@@ -79,7 +80,7 @@ public class BookService {
             throw new IllegalArgumentException(
                     "To update, the book must already be saved in the database!");
         }
-
+        bookValidator.validate(book);
         bookRepository.save(book);
     }
 }
