@@ -70,7 +70,7 @@ public class AuthorService {
 
     public void updateById(Author author) {
         if(author.getId() == null) {
-            throw new IllegalArgumentException("Author id must not be null");
+            throw new IllegalArgumentException("To update, the author must already be saved in the database!");
         }
 
         authorValidator.validate(author);

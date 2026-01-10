@@ -74,4 +74,12 @@ public class BookService {
         return bookRepository.findAll(specification);
     }
 
+    public void update(Book book) {
+        if(book.getId() == null) {
+            throw new IllegalArgumentException(
+                    "To update, the book must already be saved in the database!");
+        }
+
+        bookRepository.save(book);
+    }
 }
