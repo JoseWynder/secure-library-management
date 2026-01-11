@@ -30,6 +30,7 @@ public class SecurityConfiguration {
                 })
                 .authorizeHttpRequests(authorize -> {
                     authorize.requestMatchers("/login").permitAll();
+                    authorize.requestMatchers(HttpMethod.POST, "/users").permitAll();
                     authorize.requestMatchers("/authors/**").hasRole("ADMIN");
                     authorize.requestMatchers("/books/**").hasAnyRole("USER", "ADMIN");
 
