@@ -3,6 +3,8 @@ package io.github.josewynder.libraryapi.repository;
 import io.github.josewynder.libraryapi.model.Author;
 import io.github.josewynder.libraryapi.model.Book;
 import io.github.josewynder.libraryapi.model.BookGenre;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
@@ -24,6 +26,8 @@ import java.util.UUID;
  */
 @Repository
 public interface BookRepository extends JpaRepository<Book, UUID>, JpaSpecificationExecutor<Book> {
+
+    Page<Book> findByAuthor(Author author, Pageable pageable);
 
     // Query Method
     // https://docs.spring.io/spring-data/jpa/reference/jpa/query-methods.html

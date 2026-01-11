@@ -2,22 +2,19 @@ package io.github.josewynder.libraryapi.controller;
 
 import io.github.josewynder.libraryapi.controller.dto.BookRequestDTO;
 import io.github.josewynder.libraryapi.controller.dto.BookResponseDTO;
-import io.github.josewynder.libraryapi.controller.dto.ResponseError;
 import io.github.josewynder.libraryapi.controller.mappers.BookMapper;
 import io.github.josewynder.libraryapi.model.Book;
 import io.github.josewynder.libraryapi.model.BookGenre;
 import io.github.josewynder.libraryapi.service.BookService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/books")
@@ -57,7 +54,7 @@ public class BookController implements GenericController {
     }
 
     @GetMapping
-    public ResponseEntity<List<BookResponseDTO>> search(
+    public ResponseEntity<Page<BookResponseDTO>> search(
             @RequestParam(value = "isbn", required = false)
             String isbn,
             @RequestParam(value = "title", required = false)
@@ -67,15 +64,17 @@ public class BookController implements GenericController {
             @RequestParam(value = "genre", required = false)
             BookGenre genre,
             @RequestParam(value = "publication-year", required = false)
-            Integer publicationYear
+            Integer publicationYear,
+            @RequestParam(value = "page", defaultValue = "0")
+            Integer page,
+            @RequestParam(value = "page-size", defaultValue = "10")
+            Integer pageSize
     ) {
-        List<Book> books = bookService
-                .search(isbn, title, authorName, genre, publicationYear);
-        List<BookResponseDTO> list = books
-                        .stream()
-                        .map(bookMapper::toDTO)
-                        .toList();
-        return ResponseEntity.ok(list);
+        Page<Book> booksPage = bookService
+                .search(isbn, title, authorName, genre, publicationYear, page, pageSize);
+
+        Page<BookResponseDTO> dtos = booksPage.map(bookMapper::toDTO);
+        return ResponseEntity.ok(dtos);
     }
 
     @PutMapping("{id}")

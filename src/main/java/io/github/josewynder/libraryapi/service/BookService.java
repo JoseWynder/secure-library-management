@@ -5,6 +5,9 @@ import io.github.josewynder.libraryapi.model.BookGenre;
 import io.github.josewynder.libraryapi.repository.BookRepository;
 import io.github.josewynder.libraryapi.validator.BookValidator;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
@@ -35,8 +38,14 @@ public class BookService {
         bookRepository.delete(book);
     }
 
-    public List<Book> search(String isbn, String title, String authorName,
-                             BookGenre genre, Integer publicationYear) {
+    public Page<Book> search(
+            String isbn,
+            String title,
+            String authorName,
+            BookGenre genre,
+            Integer publicationYear,
+            Integer page,
+            Integer pageSize) {
 
         // select * from book where isbn = :isbn and author_name...
 
@@ -72,7 +81,9 @@ public class BookService {
             specification = specification.and(authorNameLike(authorName));
         }
 
-        return bookRepository.findAll(specification);
+        Pageable pageRequest = PageRequest.of(page, pageSize);
+
+        return bookRepository.findAll(specification, pageRequest);
     }
 
     public void update(Book book) {
