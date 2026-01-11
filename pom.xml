@@ -66,6 +66,12 @@
 			<artifactId>spring-boot-starter-thymeleaf</artifactId>
 		</dependency>
 
+<!--		https://github.com/vladmihalcea/hypersistence-utils-->
+		<dependency>
+			<groupId>io.hypersistence</groupId>
+			<artifactId>hypersistence-utils-hibernate-63</artifactId>
+			<version>3.14.1</version>
+		</dependency>
 	</dependencies>
 
 	<build>
