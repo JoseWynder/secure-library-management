@@ -3,6 +3,7 @@ package io.github.josewynder.libraryapi.controller.common;
 import io.github.josewynder.libraryapi.controller.dto.ErrorField;
 import io.github.josewynder.libraryapi.controller.dto.ResponseError;
 import io.github.josewynder.libraryapi.exceptions.DuplicateRegistrationException;
+import io.github.josewynder.libraryapi.exceptions.InvalidFieldException;
 import io.github.josewynder.libraryapi.exceptions.OperationNotPermittedException;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.FieldError;
@@ -41,6 +42,15 @@ public class GlobalExceptionHandler {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ResponseError handleOperationNotPermittedException(OperationNotPermittedException e) {
         return ResponseError.defaultAnswer(e.getMessage());
+    }
+
+    @ExceptionHandler(InvalidFieldException.class)
+    @ResponseStatus(HttpStatus.UNPROCESSABLE_ENTITY)
+    public ResponseError handleInvalidFieldException(InvalidFieldException e) {
+        return new ResponseError(
+                HttpStatus.UNPROCESSABLE_ENTITY.value(),
+                "Validation error",
+                List.of(new ErrorField(e.getFieldName(), e.getMessage())));
     }
 
     @ExceptionHandler(RuntimeException.class)
