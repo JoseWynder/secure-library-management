@@ -7,6 +7,7 @@ import io.github.josewynder.libraryapi.service.AuthorService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
@@ -24,6 +25,7 @@ public class AuthorController implements GenericController {
     private final AuthorMapper authorMapper;
 
     @PostMapping
+    @PreAuthorize("hasRole('MANAGER')")
     public ResponseEntity<Void> save(@RequestBody @Valid AuthorDTO dto) {
         Author author = authorMapper.toEntity(dto);
         authorService.save(author);
@@ -32,6 +34,7 @@ public class AuthorController implements GenericController {
     }
 
     @GetMapping("/{id}")
+    @PreAuthorize("hasAnyRole('OPERATOR', 'MANAGER')")
     public ResponseEntity<AuthorDTO> getDetails(@PathVariable String id) {
         UUID uuid = UUID.fromString(id);
         Optional<Author> authorOptional = authorService.findById(uuid);
@@ -46,6 +49,7 @@ public class AuthorController implements GenericController {
 
     // idempotent
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('MANAGER')")
     public ResponseEntity<Void> deleteById(@PathVariable String id) {
         UUID uuid = UUID.fromString(id);
         Optional<Author> authorOptional = authorService.findById(uuid);
@@ -58,6 +62,7 @@ public class AuthorController implements GenericController {
     }
 
     @GetMapping
+    @PreAuthorize("hasAnyRole('OPERATOR', 'MANAGER')")
     public ResponseEntity<List<AuthorDTO>> searchByNameAndNationality(
             @RequestParam(required = false) String name,
             @RequestParam(required = false) String nationality) {
@@ -70,6 +75,7 @@ public class AuthorController implements GenericController {
     }
 
     @PutMapping("{id}")
+    @PreAuthorize("hasRole('MANAGER')")
     public ResponseEntity<Void> updateById(@PathVariable String id, @RequestBody @Valid AuthorDTO authorDTO) {
         UUID uuid = UUID.fromString(id);
         Optional<Author> authorOptional = authorService.findById(uuid);
