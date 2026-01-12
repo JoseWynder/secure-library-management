@@ -59,6 +59,7 @@ public class Author {
     @Column(name = "update_date")
     private LocalDateTime updateDate;
 
-    @Column(name = "user_id")
-    private UUID userId;
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user;
 }

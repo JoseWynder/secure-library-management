@@ -2,7 +2,9 @@ package io.github.josewynder.libraryapi.service;
 
 import io.github.josewynder.libraryapi.model.Book;
 import io.github.josewynder.libraryapi.model.BookGenre;
+import io.github.josewynder.libraryapi.model.User;
 import io.github.josewynder.libraryapi.repository.BookRepository;
+import io.github.josewynder.libraryapi.security.SecurityService;
 import io.github.josewynder.libraryapi.validator.BookValidator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -23,9 +25,12 @@ public class BookService {
 
     private final BookRepository bookRepository;
     private final BookValidator bookValidator;
+    private final SecurityService securityService;
 
     public Book save(Book book) {
         bookValidator.validate(book);
+        User user = securityService.getLoggedUser();
+        book.setUser(user);
         bookRepository.save(book);
         return book;
     }

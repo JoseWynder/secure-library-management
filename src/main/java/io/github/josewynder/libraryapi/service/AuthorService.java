@@ -2,8 +2,10 @@ package io.github.josewynder.libraryapi.service;
 
 import io.github.josewynder.libraryapi.exceptions.OperationNotPermittedException;
 import io.github.josewynder.libraryapi.model.Author;
+import io.github.josewynder.libraryapi.model.User;
 import io.github.josewynder.libraryapi.repository.AuthorRepository;
 import io.github.josewynder.libraryapi.repository.BookRepository;
+import io.github.josewynder.libraryapi.security.SecurityService;
 import io.github.josewynder.libraryapi.validator.AuthorValidator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Example;
@@ -21,9 +23,12 @@ public class AuthorService {
     private final AuthorRepository authorRepository;
     private final BookRepository bookRepository;
     private final AuthorValidator authorValidator;
+    private final SecurityService securityService;
 
     public Author save(Author author) {
         authorValidator.validate(author);
+        User user = securityService.getLoggedUser();
+        author.setUser(user);
         return authorRepository.save(author);
     }
 

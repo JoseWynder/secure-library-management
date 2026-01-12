@@ -3,11 +3,16 @@ package io.github.josewynder.libraryapi.controller;
 import io.github.josewynder.libraryapi.controller.dto.AuthorDTO;
 import io.github.josewynder.libraryapi.controller.mappers.AuthorMapper;
 import io.github.josewynder.libraryapi.model.Author;
+import io.github.josewynder.libraryapi.model.User;
+import io.github.josewynder.libraryapi.security.SecurityService;
 import io.github.josewynder.libraryapi.service.AuthorService;
+import io.github.josewynder.libraryapi.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
