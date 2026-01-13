@@ -2,11 +2,9 @@ package io.github.josewynder.libraryapi.model;
 
 import io.hypersistence.utils.hibernate.type.array.ListArrayType;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
 import lombok.Data;
-import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.annotations.Type;
-import org.hibernate.type.ArrayType;
-import org.hibernate.type.SqlTypes;
 
 import java.util.List;
 import java.util.UUID;
@@ -25,6 +23,9 @@ public class User {
 
     @Column
     private String password;
+
+    @Column
+    private String email;
 
 
     @Type(ListArrayType.class) // <- deprecated

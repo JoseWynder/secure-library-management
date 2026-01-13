@@ -4,6 +4,7 @@ import io.github.josewynder.libraryapi.controller.dto.UserRequestDTO;
 import io.github.josewynder.libraryapi.controller.mappers.UserMapper;
 import io.github.josewynder.libraryapi.model.User;
 import io.github.josewynder.libraryapi.service.UserService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,7 +20,7 @@ public class UserController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public void save(@RequestBody UserRequestDTO response) {
+    public void save(@RequestBody @Valid UserRequestDTO response) {
         User user = userMapper.toEntity(response);
         userService.save(user);
     }
