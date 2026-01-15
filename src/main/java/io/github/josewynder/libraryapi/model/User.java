@@ -2,7 +2,6 @@ package io.github.josewynder.libraryapi.model;
 
 import io.hypersistence.utils.hibernate.type.array.ListArrayType;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Email;
 import lombok.Data;
 import org.hibernate.annotations.Type;
 
