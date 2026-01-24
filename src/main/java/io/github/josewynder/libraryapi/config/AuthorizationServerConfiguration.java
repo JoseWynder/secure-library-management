@@ -36,6 +36,10 @@ public class AuthorizationServerConfiguration {
     @Order(1)
     public SecurityFilterChain authServerSecurityFilterChain(HttpSecurity http)
             throws Exception {
+
+        // Deprecated
+//        OAuth2AuthorizationServerConfiguration.applyDefaultSecurity(http);
+
         OAuth2AuthorizationServerConfigurer authorizationServerConfigurer =
                 OAuth2AuthorizationServerConfigurer.authorizationServer();
 
@@ -81,7 +85,7 @@ public class AuthorizationServerConfiguration {
     @Bean
     public JWKSource<SecurityContext> jwkSource() throws Exception {
         RSAKey rsaKey = generateRSAKey();
-        JWKSet jwkSet = new JWKSet();
+        JWKSet jwkSet = new JWKSet(rsaKey);
         return new ImmutableJWKSet<>(jwkSet);
     }
 
