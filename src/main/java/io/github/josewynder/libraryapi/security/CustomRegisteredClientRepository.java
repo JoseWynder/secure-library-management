@@ -1,0 +1,53 @@
+package io.github.josewynder.libraryapi.security;
+
+import io.github.josewynder.libraryapi.model.Client;
+import io.github.josewynder.libraryapi.service.ClientService;
+import lombok.RequiredArgsConstructor;
+import org.springframework.lang.Nullable;
+import org.springframework.security.oauth2.core.AuthorizationGrantType;
+import org.springframework.security.oauth2.core.ClientAuthenticationMethod;
+import org.springframework.security.oauth2.server.authorization.client.RegisteredClient;
+import org.springframework.security.oauth2.server.authorization.client.RegisteredClientRepository;
+import org.springframework.stereotype.Component;
+
+@Component
+@RequiredArgsConstructor
+public class CustomRegisteredClientRepository implements RegisteredClientRepository {
+
+    private final ClientService clientService;
+
+    @Override
+    public void save(RegisteredClient registeredClient) {}
+
+    @Nullable
+    @Override
+    public RegisteredClient findById(String id) {
+        return null;
+    }
+
+    @Nullable
+    @Override
+    public RegisteredClient findByClientId(String clientId) {
+        Client client = clientService.findByClientId(clientId);
+
+        if(client == null) {
+            return null;
+        }
+
+        return RegisteredClient
+                .withId(client.getId().toString())
+                .clientId(client.getClientId())
+                .clientSecret(client.getClientSecret())
+                .redirectUri(client.getRedirectUri())
+                .scope(client.getScope())
+                .clientAuthenticationMethod(
+                        ClientAuthenticationMethod.CLIENT_SECRET_BASIC)
+                .authorizationGrantType(
+                        AuthorizationGrantType.AUTHORIZATION_CODE)
+                .authorizationGrantType(
+                        AuthorizationGrantType.CLIENT_CREDENTIALS)
+//                .tokenSettings()
+//                .clientSettings()
+                .build();
+    }
+}

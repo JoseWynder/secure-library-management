@@ -21,7 +21,7 @@ public class Client {
     private String clientSecret;
 
     @Column(name = "redirect_uri")
-    private String redirectURI;
+    private String redirectUri;
 
     @Column
     private String scope;
