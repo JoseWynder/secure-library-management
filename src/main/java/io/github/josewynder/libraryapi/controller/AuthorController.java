@@ -39,6 +39,8 @@ public class AuthorController implements GenericController {
             @ApiResponse(responseCode = "409", description = "Author already registered")
     })
     public ResponseEntity<Void> save(@RequestBody @Valid AuthorDTO dto) {
+        log.info("Saving a new author: {}", dto.name());
+
         Author author = authorMapper.toEntity(dto);
         authorService.save(author);
         URI location = getHeaderLocation(author.getId());
@@ -74,6 +76,7 @@ public class AuthorController implements GenericController {
             @ApiResponse(responseCode = "400", description = "The author has a registered book")
     })
     public ResponseEntity<Void> deleteById(@PathVariable String id) {
+        log.info("Deleting author with id: {}", id);
         UUID uuid = UUID.fromString(id);
         Optional<Author> authorOptional = authorService.findById(uuid);
         if (authorOptional.isEmpty()) {
@@ -93,13 +96,6 @@ public class AuthorController implements GenericController {
     public ResponseEntity<List<AuthorDTO>> searchByNameAndNationality(
             @RequestParam(required = false) String name,
             @RequestParam(required = false) String nationality) {
-
-        log.trace("Searching for authors by name and nationality");
-        log.debug("Searching for authors by name and nationality");
-        log.info("Searching for authors by name and nationality");
-        log.warn("Searching for authors by name and nationality");
-        log.error("Searching for authors by name and nationality");
-
         List<Author> authors = authorService.searchByExample(name, nationality);
         List<AuthorDTO> authorDTOS = authors
                 .stream()
