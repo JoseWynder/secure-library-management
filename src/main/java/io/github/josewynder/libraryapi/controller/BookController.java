@@ -6,6 +6,10 @@ import io.github.josewynder.libraryapi.controller.mappers.BookMapper;
 import io.github.josewynder.libraryapi.model.Book;
 import io.github.josewynder.libraryapi.model.BookGenre;
 import io.github.josewynder.libraryapi.service.BookService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -14,12 +18,12 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
-import java.util.List;
 import java.util.UUID;
 
 @RestController
 @RequestMapping("/books")
 @RequiredArgsConstructor
+@Tag(name = "Books")
 public class BookController implements GenericController {
 
     private final BookService bookService;
@@ -27,6 +31,12 @@ public class BookController implements GenericController {
 
     @PostMapping
     @PreAuthorize("hasAnyRole('OPERATOR', 'MANAGER')")
+    @Operation(summary = "Save", description = "Register a new book")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "Book registered successfully"),
+            @ApiResponse(responseCode = "422", description = "Validation error"),
+            @ApiResponse(responseCode = "409", description = "Book already registered")
+    })
     public ResponseEntity<Void> save(@RequestBody @Valid BookRequestDTO dto) {
         Book book = bookMapper.toEntity(dto);
         Book savedBook = bookService.save(book);
@@ -36,6 +46,11 @@ public class BookController implements GenericController {
 
     @GetMapping("/{id}")
     @PreAuthorize("hasAnyRole('OPERATOR', 'MANAGER')")
+    @Operation(summary = "Get Details", description = "Retrieve book details by ID")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Book found"),
+            @ApiResponse(responseCode = "404", description = "Book not found")
+    })
     public ResponseEntity<BookResponseDTO> getDetails(
             @PathVariable String id) {
         return bookService
@@ -48,6 +63,11 @@ public class BookController implements GenericController {
 
     @DeleteMapping("/{id}")
     @PreAuthorize("hasAnyRole('OPERATOR', 'MANAGER')")
+    @Operation(summary = "Delete", description = "Delete a book by ID")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "204", description = "Book deleted successfully"),
+            @ApiResponse(responseCode = "404", description = "Book not found")
+    })
     public ResponseEntity<Object> delete(@PathVariable String id) {
         return bookService
                 .findById(UUID.fromString(id))
@@ -59,6 +79,10 @@ public class BookController implements GenericController {
 
     @GetMapping
     @PreAuthorize("hasAnyRole('OPERATOR', 'MANAGER')")
+    @Operation(summary = "Search", description = "Search books by ISBN, title, author, genre or year")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Books retrieved successfully")
+    })
     public ResponseEntity<Page<BookResponseDTO>> search(
             @RequestParam(value = "isbn", required = false)
             String isbn,
@@ -84,6 +108,12 @@ public class BookController implements GenericController {
 
     @PutMapping("{id}")
     @PreAuthorize("hasAnyRole('OPERATOR', 'MANAGER')")
+    @Operation(summary = "Update", description = "Update a book by ID")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "204", description = "Book updated successfully"),
+            @ApiResponse(responseCode = "404", description = "Book not found"),
+            @ApiResponse(responseCode = "409", description = "Book already registered")
+    })
     public ResponseEntity<Object> update(@PathVariable String id, @RequestBody @Valid BookRequestDTO dto) {
         return bookService
                 .findById(UUID.fromString(id))
