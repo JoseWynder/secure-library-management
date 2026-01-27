@@ -1,8 +1,9 @@
 spring:
   application:
     name: libraryapi
-  profiles:
-    active: production
+#  profiles:
+#    active: production
+# SPRING_PROFILES_ACTIVE=production
   output:
     ansi:
       enabled: ALWAYS
@@ -35,11 +36,11 @@ logging:
     root: warn
     io:
       github:
-        josewynder: trace
+        josewynder: debug
     org:
       springframework:
-        web: debug
-        security: trace
+        web: warn
+        security: warn
 
 # trace
 # debug
@@ -57,3 +58,23 @@ management:
 
 springdoc:
   override-with-generic-response: false
+
+# Production
+---
+spring:
+  config:
+    activate:
+      on-profile: production, approval
+  jpa:
+    show-sql: false
+
+# Development
+---
+spring:
+  config:
+    activate:
+      on-profile: development
+  datasource:
+    url: jdbc:postgresql://localhost:5432/library
+  jpa:
+    show-sql: true
