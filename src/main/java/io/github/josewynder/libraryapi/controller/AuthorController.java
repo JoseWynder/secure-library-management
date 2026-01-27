@@ -10,6 +10,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -23,6 +24,7 @@ import java.util.UUID;
 @RequestMapping("/authors")
 @RequiredArgsConstructor
 @Tag(name = "Authors")
+@Slf4j
 public class AuthorController implements GenericController {
 
     private final AuthorService authorService;
@@ -91,6 +93,13 @@ public class AuthorController implements GenericController {
     public ResponseEntity<List<AuthorDTO>> searchByNameAndNationality(
             @RequestParam(required = false) String name,
             @RequestParam(required = false) String nationality) {
+
+        log.trace("Searching for authors by name and nationality");
+        log.debug("Searching for authors by name and nationality");
+        log.info("Searching for authors by name and nationality");
+        log.warn("Searching for authors by name and nationality");
+        log.error("Searching for authors by name and nationality");
+
         List<Author> authors = authorService.searchByExample(name, nationality);
         List<AuthorDTO> authorDTOS = authors
                 .stream()

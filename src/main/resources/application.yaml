@@ -24,6 +24,21 @@ spring:
 logging:
   file:
     name: app.log
+  level:
+    root: warn
+    io:
+      github:
+        josewynder: trace
+    org:
+      springframework:
+        web: debug
+        security: trace
+
+# trace
+# debug
+# info
+# warn
+# error
 
 springdoc:
   override-with-generic-response: false
