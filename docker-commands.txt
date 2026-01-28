@@ -82,3 +82,10 @@ josewynder/libraryapi
 
 docker images
 docker logs libraryapi-production
+
+# Uploading to docker hub
+
+# docker tag ${IMAGE_NAME} ${TAG_NAME}
+docker tag josewynder/libraryapi josewynder/libraryapi
+docker login
+docker push josewynder/libraryapi
