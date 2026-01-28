@@ -11,3 +11,30 @@ docker run --name librarydb -p 5432:5432 -d --network library-network -e POSTGRE
 
 # Run pgadmin 4
 docker run --name pgadmin4 -p 15432:80 -d --network library-network -e PGADMIN_DEFAULT_EMAIL=admin@admin.com -e PGADMIN_DEFAULT_PASSWORD=admin dpage/pgadmin4:9.11
+
+# PRODUCTION POSTGRES
+
+docker run --name librarydb-prod -e POSTGRES_PASSWORD=postgresprod -e POSTGRES_USER=postgresprod -e POSTGRES_DB=library -p 5433:5432 -d --network library-network postgres:17.7
+
+# Connecting the Docker database to pgAdmin
+servers -> register -> server:
+
+General:
+  Name: anyone
+Connection:
+  Host name/address: ${NAME}
+  Port: ${CONTAINER_PORT}
+  Maintenance database: ${POSTGRES_DB}
+  Username: ${POSTGRES_USER}
+  Password: ${POSTGRES_PASSWORD}
+
+---
+
+General:
+  Name: production
+Connection:
+  Host name/address: librarydb-prod
+  Port: 5432
+  Maintenance database: library
+  Username: postgresprod
+  Password: postgresprod
