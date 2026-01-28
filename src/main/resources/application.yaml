@@ -65,6 +65,8 @@ spring:
   config:
     activate:
       on-profile: production, approval
+  application:
+    name: libraryprod
   jpa:
     show-sql: false
 
