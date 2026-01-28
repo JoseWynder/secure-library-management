@@ -1,4 +1,4 @@
-Check port:
+# Check port:
 
 netstat -aof | findstr 5432
 
@@ -7,14 +7,36 @@ netstat -aof | findstr 5432
 docker create network library-network
 
 # It runs a Postgres container in version 17.7
-docker run --name librarydb -p 5432:5432 -d --network library-network -e POSTGRES_PASSWORD=postgres -e POSTGRES_USER=postgres -e POSTGRES_DB=library postgres:17.7
+docker run
+--name librarydb
+-p 5432:5432
+-d
+--network library-network
+-e POSTGRES_PASSWORD=postgres
+-e POSTGRES_USER=postgres
+-e POSTGRES_DB=library
+postgres:17.7
 
 # Run pgadmin 4
-docker run --name pgadmin4 -p 15432:80 -d --network library-network -e PGADMIN_DEFAULT_EMAIL=admin@admin.com -e PGADMIN_DEFAULT_PASSWORD=admin dpage/pgadmin4:9.11
+docker run
+--name pgadmin4
+-p 15432:80
+-d
+--network library-network
+-e PGADMIN_DEFAULT_EMAIL=admin@admin.com
+-e PGADMIN_DEFAULT_PASSWORD=admin
+dpage/pgadmin4:9.11
 
 # PRODUCTION POSTGRES
 
-docker run --name librarydb-prod -e POSTGRES_PASSWORD=postgresprod -e POSTGRES_USER=postgresprod -e POSTGRES_DB=library -p 5433:5432 -d --network library-network postgres:17.7
+docker run
+--name librarydb-prod
+-e POSTGRES_PASSWORD=postgresprod
+-e POSTGRES_USER=postgresprod
+-e POSTGRES_DB=library -p 5433:5432
+-d
+--network library-network
+postgres:17.7
 
 # Connecting the Docker database to pgAdmin
 servers -> register -> server:
@@ -38,3 +60,25 @@ Connection:
   Maintenance database: library
   Username: postgresprod
   Password: postgresprod
+
+# package and run
+./mvnw clean package -DskipTests
+java -jar .\target\libraryapi-0.0.1-SNAPSHOT.jar
+
+# Build
+
+docker build --tag josewynder/libraryapi .
+
+docker run
+--name libraryapi-production
+-e DATASOURCE_URL=jdbc:postgresql://librarydb-prod:5432/library
+-e DATASOURCE_USERNAME=postgresprod
+-e DATASOURCE_PASSWORD=postgresprod
+--network library-network
+-d
+-p 8080:8080
+-p 9090:9090
+josewynder/libraryapi
+
+docker images
+docker logs libraryapi-production
