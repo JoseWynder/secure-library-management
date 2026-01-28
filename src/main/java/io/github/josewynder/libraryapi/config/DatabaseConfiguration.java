@@ -2,6 +2,7 @@ package io.github.josewynder.libraryapi.config;
 
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -10,6 +11,7 @@ import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import javax.sql.DataSource;
 
 @Configuration
+@Slf4j
 public class DatabaseConfiguration {
 
     @Value("${spring.datasource.url}")
@@ -25,8 +27,7 @@ public class DatabaseConfiguration {
     private String driver;
 
 //    @Bean
-    public DataSource dataSource() {
-        DriverManagerDataSource dataSource = new DriverManagerDataSource();
+    public DataSource dataSource() {DriverManagerDataSource dataSource = new DriverManagerDataSource();
         dataSource.setUrl(url);
         dataSource.setUsername(username);
         dataSource.setPassword(password);
@@ -40,8 +41,11 @@ public class DatabaseConfiguration {
      * https://github.com/brettwooldridge/HikariCP
      * @return
      */
-//    @Bean
+    @Bean
     public DataSource hikariDataSource() {
+
+        log.info("Starting connection to the database at the URL: {}", url);
+
         HikariConfig config = new HikariConfig();
         config.setJdbcUrl(url);
         config.setUsername(username);
