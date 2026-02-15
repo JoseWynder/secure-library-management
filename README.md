@@ -1,78 +1,135 @@
-<h1 align="center">Library API</h1>
+<h1 align="center">Secure Library Management</h1>
 
-API REST para gerenciamento de autores e livros, desenvolvida como projeto consolidado
-de estudos avançados no ecossistema Spring e construção de aplicações backend completas.
-
----
-
-## 📌 Sobre
-
-Projeto desenvolvido durante um curso avançado de Spring Boot com o objetivo de aplicar,
-em um único sistema, conceitos essenciais de arquitetura backend moderna, segurança,
-persistência de dados e deploy em ambiente cloud.
-
-Apesar do domínio simples — gerenciamento de autores, livros e usuários —
-o foco principal foi a construção de uma API robusta, segura e estruturada
-seguindo boas práticas reais de desenvolvimento backend.
+API REST desenvolvida com Java 21 e Spring Boot 3, com foco em autenticação OAuth2, controle de acesso e organização arquitetural voltada para ambientes reais de produção.
 
 ---
 
-## ⚙️ Funcionalidades
+## 📌 Visão Geral
 
-CRUD completo de autores e livros • controle de usuários e permissões •
-autenticação e autorização com OAuth2 e JWT • documentação automática com Swagger •
-validações, tratamento de exceções e organização em camadas.
+Aplicação backend para gerenciamento de:
+
+- Autores  
+- Livros  
+- Clientes  
+- Usuários  
+
+O projeto foi construído para simular um cenário completo de API segura, incluindo autenticação, autorização por perfil e deploy em ambiente cloud.
 
 ---
 
-## 🛠️ Stack
+## 🚀 Funcionalidades
 
-Java 21 • Spring Boot 3 • Spring Security • OAuth2 • JWT • Spring Data JPA •
-PostgreSQL • Docker • AWS (EC2 + RDS) • Swagger/OpenAPI
+- Gestão completa de Autores, Livros, Clientes e Usuários  
+- Sistema de autenticação com emissão de tokens  
+- Controle de acesso baseado em perfis de usuário  
+- Proteção de endpoints sensíveis  
+- Documentação automática da API via OpenAPI/Swagger  
+- Tratamento global de exceções  
+- Containerização da aplicação com Docker  
+- Deploy em ambiente AWS
+
+---
+
+## 🛠 Stack Tecnológica
+
+- Java 21  
+- Spring Boot 3.5.9  
+- Spring Security  
+- Spring Authorization Server  
+- Spring Data JPA (Hibernate)  
+- PostgreSQL  
+- Docker  
+- AWS (EC2 + RDS)  
+- OpenAPI / Swagger  
 
 ---
 
 ## 🧱 Arquitetura
 
-Arquitetura em camadas com separação clara de responsabilidades entre controllers,
-services, repositories e componentes de segurança.
+A aplicação segue o padrão em camadas (Layered Architecture), com separação explícita entre:
 
-Organização baseada em boas práticas de APIs REST modernas, incluindo DTOs,
-mapeadores, validações, tratamento global de exceções e configuração modular
-dos aspectos de segurança e persistência.
+- `controller` → exposição dos endpoints  
+- `service` → regras de negócio  
+- `repository` → acesso a dados  
+- `security` → configuração de autenticação e autorização  
+- `config` → configurações gerais da aplicação  
+- `validator` → validações customizadas  
+- `exceptions` → tratamento centralizado de erros  
+
+### Decisões Arquiteturais
+
+- Uso de DTOs para evitar exposição direta das entidades.
+- Separação entre configuração de Authorization Server e Resource Server.
+- Autenticação stateless utilizando JWT.
+- Hashing de senhas com BCrypt.
+- Tratamento global de exceções com `@RestControllerAdvice`.
+
+A organização foi pensada para manter baixo acoplamento e facilitar evolução futura.
 
 ---
 
 ## 🔐 Segurança
 
-Implementação completa com Spring Security utilizando OAuth2 e tokens JWT,
-controle de acesso baseado em roles, hashing de senhas e múltiplos fluxos
-de autenticação voltados para APIs modernas.
+A aplicação atua simultaneamente como:
+
+- Authorization Server (emissão de tokens)
+- Resource Server (proteção dos recursos)
+
+### Estratégia adotada
+
+- Tokens JWT assinados
+- Controle de acesso baseado em roles
+- Configuração explícita de SecurityFilterChain
+- Fluxos OAuth2 implementados:
+  - Authorization Code
+  - Client Credentials
+  - Refresh Token
+
+O modelo adotado permite simular um ambiente real de autenticação centralizada.
+
+---
+
+## 🐳 Containerização
+
+A aplicação possui Dockerfile próprio.
+
+A imagem é publicada no Docker Hub e pode ser executada isoladamente ou conectada a um banco PostgreSQL externo.
+
+Comandos utilizados para build e execução estão documentados em `docker-commands.txt`.
 
 ---
 
 ## ☁️ Deploy
 
-Aplicação containerizada com Docker, publicada como imagem e executada em uma instância EC2,
-com banco PostgreSQL gerenciado em RDS. O ambiente foi posteriormente pausado,
-mas permanece totalmente configurável para execução.
+Deploy manual realizado na AWS:
+
+- Instância EC2 para execução da aplicação
+- PostgreSQL hospedado no RDS
+- Configuração manual de variáveis de ambiente
+
+A escolha pelo deploy manual teve como objetivo aprofundar o entendimento da infraestrutura e configuração do ambiente.
 
 ---
 
-## 💡 Aprendizados
+## 🧪 Testes
 
-Construção de APIs REST completas • organização arquitetural em projetos maiores •
-implementação real de autenticação e autorização • integração com serviços AWS •
-containerização e deploy de aplicações backend • configuração avançada do ecossistema Spring.
+- Testes de integração implementados para validação da camada de persistência.
+- Estratégias mais aprofundadas de testes (unitários, integração e configuração de contexto Spring) foram exploradas em um repositório dedicado:
+  [Spring Boot Testing](https://github.com/JoseWynder/spring-boot-testing-playground)
+
+---
+
+## 🔄 Possíveis Evoluções
+
+- Versionamento de banco com Flyway ou Liquibase  
+- Implementação de pipeline CI/CD  
+- Docker Compose para orquestração local  
+- Ampliação da cobertura de testes  
+- Implementação de métricas e observabilidade  
+- Refinamento da modularização da segurança  
 
 ---
 
 ## 📊 Status
 
-Projeto finalizado como parte do curso e utilizado como base consolidada
-dos estudos avançados em backend com Spring Boot.
-
----
-
-<p align="center"> <em>📚 Mais do que o domínio da aplicação, este projeto representa a integração prática de segurança, 
-  arquitetura e deploy em um fluxo completo de desenvolvimento backend.</em> </p>
+Projeto concluído como estudo avançado de autenticação OAuth2, controle de acesso e deploy em cloud utilizando o ecossistema Spring.
