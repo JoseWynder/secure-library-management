@@ -94,14 +94,12 @@ A aplicação segue uma **arquitetura em camadas**, separando responsabilidades 
 
 Algumas decisões estruturais adotadas:
 
-* Uso de **DTOs** para evitar exposição direta das entidades
-* Tratamento global de exceções com `@RestControllerAdvice`
-* Autenticação **stateless com JWT**
-* Hashing de senhas utilizando **BCrypt**
-* Configuração explícita de **SecurityFilterChain**
-* Implementação de **Custom Authentication Provider**
 * Separação entre **Authorization Server** e **Resource Server**
+* Autenticação **stateless com JWT**
+* Implementação de **Custom Authentication Provider**
+* Uso de **DTOs** para evitar exposição direta das entidades
 * Uso de **Specifications** para consultas mais flexíveis no JPA
+* Tratamento global de exceções com `@RestControllerAdvice`
 
 
 ### Diagrama de arquitetura
