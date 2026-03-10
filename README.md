@@ -139,7 +139,7 @@ A imagem da aplicação foi publicada no **Docker Hub** e utilizada durante o pr
 Clone o repositório:
 
 ```
-git clone https://github.com/seu-usuario/secure-library-management.git
+git clone https://github.com/JoseWynder/secure-library-management.git
 ```
 
 Configure as variáveis de conexão com o banco de dados no arquivo:
@@ -177,10 +177,9 @@ Estratégias mais avançadas de testes com **JUnit, Mockito e MockMvc** foram ex
 * Versionamento de banco de dados com **Flyway ou Liquibase**
 * Orquestração local com **Docker Compose**
 * Ampliação da cobertura de testes automatizados
-* Ampliação da cobertura de testes
 
 ---
 
 ## Status
 
-Projeto concluído como estudo avançado de **segurança em APIs REST, autenticação OAuth2 e deploy em cloud utilizando o ecossistema Spring**.
+Projeto concluído como estudo avançado de **segurança, autenticação OAuth2 e deploy em cloud com o ecossistema Spring**.
